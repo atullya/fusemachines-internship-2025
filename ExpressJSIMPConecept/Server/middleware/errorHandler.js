@@ -50,7 +50,7 @@ const globalErrorHandler = (err, req, res, next) => {
 module.exports = { APIError, asyncHandler, globalErrorHandler };
 
 /*
-he Problem (Why we need it):
+The Problem (Why we need it):
 When you use async/await in Express routes, errors don't get caught automatically:
 
 JavaScript

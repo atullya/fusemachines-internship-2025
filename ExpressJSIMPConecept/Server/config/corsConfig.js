@@ -6,7 +6,7 @@ const configureCors = () => {
     origin: (origin, callback) => {
       // List of websites that are allowed to use your API
       const allowedOrigins = [
-        "http://localhost:3000", // Your local development site
+        "http://localhost:5173", // Your local development site
         "https://yourdomain.com", // Your production website
       ];
 

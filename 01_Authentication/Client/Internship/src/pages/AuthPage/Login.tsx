@@ -9,39 +9,47 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/context/AuthContext";
 import { apiService } from "@/services/apiServices";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function Login() {
   const navigate = useNavigate();
+
   interface LoginFormData {
     email: string;
     password: string;
   }
+
+  const { checkAuth } = useAuth();
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
-    password: "",
+    password: "1234567890",
   });
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false); // <--- Loading state
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true); // disable button
+    setErrorMessage(""); // clear previous errors
     try {
-      e.preventDefault();
-      console.log(formData);
       const resData = await apiService.login(formData.email, formData.password);
       console.log(resData);
       if (resData.success) {
+        await checkAuth();
         navigate("/welcome");
-        setErrorMessage("");
       }
     } catch (error: any) {
       setErrorMessage(error.message);
-      console.log(error);
+    } finally {
+      setLoading(false); // enable button again
     }
   };
 
@@ -88,8 +96,8 @@ export function Login() {
           </div>
           {errorMessage && <h1 className="text-red-900">{errorMessage}</h1>}
           <CardFooter className="flex-col gap-2">
-            <Button type="submit" className="w-full">
-              Login
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
             </Button>
           </CardFooter>
         </form>

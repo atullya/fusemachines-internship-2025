@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 3000;
 //middleware
 
 app.use(express.json());
-app.use(configureCors()); //this is imp
+app.use(configureCors());
 app.use(requestLogger);
 app.use(addTimeStamp);
 app.use(cookieParser());

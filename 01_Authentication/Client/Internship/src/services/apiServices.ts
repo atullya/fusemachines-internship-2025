@@ -1,5 +1,6 @@
 import axios from "axios"
 
+
 const API_BASE_URL = "http://localhost:3000/api";
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -48,15 +49,21 @@ register(userData: RegisterUserData) {
   logout() {
     return this.request({
       url: "/v1/auth/logout",
-      method: "POST",
+      method: "GET",
     });
   }
 
     welcome(){
     return this.request({
-      url:"/v1/home/welcome",
+      url:"/v1/auth/welcome",
       method:"GET"
     });
+  }
+  checkAuth(){
+    return this.request({
+      url:'/v1/auth/check',
+      method:"GET"
+    })
   }
 }
 

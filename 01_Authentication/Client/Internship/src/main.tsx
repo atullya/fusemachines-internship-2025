@@ -6,6 +6,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Welcome from "./pages/HomePage/Welcome.tsx";
 import { Login } from "./pages/AuthPage/Login.tsx";
 import { Signup } from "./pages/AuthPage/Signup.tsx";
+import { AuthProvider } from "./context/AuthContext.tsx";
+import ProtectedRoute from "./components/ui/ProtectedRoutes.tsx";
 
 const allRoutes = createBrowserRouter([
   {
@@ -14,7 +16,11 @@ const allRoutes = createBrowserRouter([
   },
   {
     path: "/welcome",
-    element: <Welcome />,
+    element: (
+      <ProtectedRoute>
+        <Welcome />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/login",
@@ -28,6 +34,8 @@ const allRoutes = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={allRoutes} />
+    <AuthProvider>
+      <RouterProvider router={allRoutes} />
+    </AuthProvider>
   </StrictMode>
 );
