@@ -11,6 +11,7 @@ import { urlVersioning } from "./middleware/apiVersioning";
 import { createBasicRateLimiter } from "./middleware/rateLimiting";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/user.route";
+import todoRoutes from "./routes/todo.routes";
 const app:Application = express();
 
 
@@ -24,6 +25,7 @@ app.use(createBasicRateLimiter(1000, 15 * 60 * 1000));
 app.use(cookieParser())
 
 app.use('/api/v1/auth',userRoutes);
+app.use('/api/v1/todo',todoRoutes);
 
 
 
