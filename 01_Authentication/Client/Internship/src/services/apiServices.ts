@@ -65,6 +65,13 @@ register(userData: RegisterUserData) {
       method:"GET"
     })
   }
+  editPassword(password:string,newPassword:string){
+    return this.request({
+      url:'/v1/auth/changePassword',
+      method:"POST",
+      data:{password,newPassword}
+    })
+  }
 }
 
 export const apiService = new ApiService();

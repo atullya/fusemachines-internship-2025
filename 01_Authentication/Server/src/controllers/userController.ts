@@ -110,3 +110,39 @@ export const checkAuth = async (req:Request, res:Response) => {
     res.status(200).json(req.user);
  
 };
+
+export const changePassword = async (req: Request, res: Response) => {
+  
+    logger.info("Changing Password...");
+
+    const userId = req.user._id;
+    const { password, newPassword } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ success: false, message: "UserId is required" });
+    }
+    if (!password || !newPassword) {
+      return res.status(400).json({ success: false, message: "All fields are required!" });
+    }
+
+    const findUser = await User.findById(userId);
+    if (!findUser) {
+      return res.status(400).json({ success: false, message: "No user found with that id" });
+    }
+
+    const checkValidPassword = await bcrypt.compare(password, findUser.password);
+    if (!checkValidPassword) {
+      return res.status(400).json({ success: false, message: "Invalid credentials" });
+    }
+
+    if (password === newPassword) {
+      return res.status(400).json({ success: false, message: "New password must be different" });
+    }
+
+    const newHashedPassword = await bcrypt.hash(newPassword, 10);
+    findUser.password = newHashedPassword;
+    await findUser.save();
+
+    return res.status(200).json({ success: true, message: "Password changed successfully" });
+
+};
