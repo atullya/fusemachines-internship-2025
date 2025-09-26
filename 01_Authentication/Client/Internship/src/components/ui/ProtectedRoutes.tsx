@@ -1,12 +1,23 @@
-import { useAuth } from "@/context/AuthContext";
-import React from "react"; // ensures JSX namespace exists
+import React, { useEffect } from "react";
 import { Navigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState, AppDispatch } from "@/store/store";
+import { checkAuth } from "@/store/authSlice";
 
 const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
-  const { authorized, loading } = useAuth();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { authorize, loading } = useSelector((state: RootState) => state.auth);
+
+
+  useEffect(() => {
+    if (loading) {
+      dispatch(checkAuth());
+    }
+  }, [dispatch, loading]);
 
   if (loading) return <div>Loading...</div>;
-  if (!authorized) return <Navigate to="/" replace />;
+  if (!authorize) return <Navigate to="/" replace />;
 
   return children;
 };
