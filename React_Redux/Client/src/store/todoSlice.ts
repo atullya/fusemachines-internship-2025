@@ -9,6 +9,8 @@ interface Todo {
 interface TodoState {
   todos: Todo[];
 }
+
+
 //initial state
 const initialState: TodoState = {
   todos: [{ id: Date.now(), title: "test", completed: false }],
