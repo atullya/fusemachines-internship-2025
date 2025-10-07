@@ -1,30 +1,36 @@
 import * as dotenv from "dotenv";
-dotenv.config()
+dotenv.config();
 
-import express,{Request,Response} from "express";
+import express, { Request, Response } from "express";
 import { configureCors } from "./config/corsOption";
 import { globalErrorHandler } from "./middleware/errorHandler";
-import { requestLogger,addTimeStamp } from "./middleware/customeMiddleware";
-import cookieParser from "cookie-parser"
+import { requestLogger, addTimeStamp } from "./middleware/customeMiddleware";
+import cookieParser from "cookie-parser";
 import { connectDb } from "./db/dbConnect";
 import { logger } from "./config/logger";
 import userRoute from "./routes/user.route";
-
+import adminRoutes from "./routes/admin.route";
+import authRoutes from "./routes/auth.route";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json())
-app.use(configureCors())
-app.use(requestLogger)
-app.use(addTimeStamp)
-app.use(cookieParser())
+app.use(express.json());
+app.use(configureCors());
+app.use(requestLogger);
+app.use(addTimeStamp);
+app.use(cookieParser());
 
-app.use('/api/v1',userRoute)
+app.get("/", (req, res) => {
+  return res.status(200).json({ message: "hel" });
+});
+app.use("/api/v1", userRoute);
+app.use("/api/v1/product", adminRoutes);
+app.use("/api/v1/auth", authRoutes);
+app.use(globalErrorHandler);
 
-app.use(globalErrorHandler)
 const startServer = async () => {
   try {
-    await connectDb();           
+    await connectDb();
     app.listen(PORT, () => {
       logger.info(`Server running at http://localhost:${PORT}`);
     });

@@ -1,7 +1,12 @@
 import "./App.css";
+import AuthHome from "./component/Auth/AuthHome";
 
 function App() {
-  return <>asadf</>;
+  return (
+    <>
+      <AuthHome />
+    </>
+  );
 }
 
 export default App;

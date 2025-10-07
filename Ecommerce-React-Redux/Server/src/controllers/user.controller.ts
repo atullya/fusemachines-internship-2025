@@ -2,10 +2,11 @@ import { Request, Response } from "express";
 import { logger } from "../config/logger";
 import { User } from "../models/user.model";
 import { accessAndRefreshToken } from "../utils/generateAccessAndRefereshToken";
+import { RefereshToken } from "../models/refereshToken";
 
 export const registerUser = async (req: Request, res: Response) => {
   logger.info("Registering New User....");
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
   if (!name || !email || !password) {
     return res
       .status(400)
@@ -19,7 +20,7 @@ export const registerUser = async (req: Request, res: Response) => {
       message: "User already exists with that email",
     });
   }
-  const registerNewUser = new User({ name, email, password });
+  const registerNewUser = new User({ name, email, password, role });
   const insertNewUser = await registerNewUser.save();
 
   if (!insertNewUser) {
@@ -67,7 +68,37 @@ export const loginUser = async (req: Request, res: Response) => {
     _id: findUser._id,
     username: findUser.name,
     email: findUser.email,
+    role: findUser.role,
     accessToken,
     refreshToken,
   });
+};
+
+export const logoutUser = async (req: Request, res: Response) => {
+  logger.info("Logging out user..");
+
+  const refreshToken = req.cookies.refreshToken;
+  if (refreshToken) {
+    await RefereshToken.deleteOne({ token: refreshToken }); // ❗ remove from DB
+  }
+
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    sameSite: "strict",
+    secure: process.env.NODE_ENV !== "development",
+  });
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    sameSite: "strict",
+    secure: process.env.NODE_ENV !== "development",
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: "Logged out successfully",
+  });
+};
+
+export const checkAuth = async (req: Request, res: Response) => {
+  return res.status(200).json(req.user);
 };
