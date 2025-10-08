@@ -11,6 +11,7 @@ import { logger } from "./config/logger";
 import userRoute from "./routes/user.route";
 import adminRoutes from "./routes/admin.route";
 import authRoutes from "./routes/auth.route";
+import cartRoutes from "./routes/cart.routes";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1", userRoute);
 app.use("/api/v1/product", adminRoutes);
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/cart", cartRoutes);
 app.use(globalErrorHandler);
 
 const startServer = async () => {

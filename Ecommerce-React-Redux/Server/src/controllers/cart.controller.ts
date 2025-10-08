@@ -1,10 +1,13 @@
 import { Request, Response } from "express";
 import Cart from "../models/cart.model";
 import Product from "../models/product.model"; // keep this import as-is
+import { logger } from "../config/logger";
+import { APIError } from "../middleware/errorHandler";
 
 export const addToCart = async (req: Request, res: Response) => {
+  logger.info("Adding to cart....");
   const userId = req.user._id;
-  const { productId, quantity } = req.body;
+  const { productId, quantity = 1 } = req.body;
 
   // find or create cart for user
   let cart = await Cart.findOne({ userId });
@@ -60,8 +63,32 @@ items: [
     const price = product?.price ?? 0;
     return total + item.quantity * price;
   }, 0);
+  const items = {
+    cart,
+    totalPrice,
+  };
 
-  res.status(200).json({ success: true, cart, totalPrice });
+  res.status(200).json({ success: true, items });
+};
+
+//get cart of user
+export const getCart = async (req: Request, res: Response) => {
+  const userId = req.user._id;
+  const cart = await Cart.findOne({ userId }).populate("items.productId");
+  if (!cart) {
+    return res.status(404).json({ success: false, message: "Cart not found" });
+  }
+  const totalPrice = cart.items.reduce((total, item) => {
+    const product: any = item.productId;
+    const price = product?.price ?? 0;
+    return total + item.quantity * price;
+  }, 0);
+  const items = {
+    cart,
+    totalPrice,
+  };
+  res.status(200).json({ success: true, items });
+//   res.status(200).json({ success: true, cart,totalPrice });
 };
 
 export const updateCartQuantity = async (req: Request, res: Response) => {

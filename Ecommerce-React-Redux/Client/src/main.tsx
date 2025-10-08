@@ -11,6 +11,7 @@ import ProtectRoute from "./component/ProtectRoute.tsx";
 import AdminHome from "./Pages/Admin/AdminHome.tsx";
 import DisplayAllProduct from "./Pages/User/DisplayAllProduct.tsx";
 import ProductDetails from "./Pages/User/ProductDetails.tsx";
+import Cart from "./Pages/User/Cart/Cart.tsx";
 const allRoutes = createBrowserRouter([
   {
     path: "/",
@@ -45,6 +46,14 @@ const allRoutes = createBrowserRouter([
     element: (
       <ProtectRoute>
         <ProductDetails />
+      </ProtectRoute>
+    ),
+  },
+  {
+    path: "/cart",
+    element: (
+      <ProtectRoute>
+        <Cart />
       </ProtectRoute>
     ),
   },

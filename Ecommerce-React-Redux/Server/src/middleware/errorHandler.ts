@@ -1,9 +1,9 @@
-import { Request,Response,NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { logger } from "../config/logger";
 
-export class APIError extends Error{
-   public statusCode: number;
-     constructor(message: string, statusCode: number) {
+export class APIError extends Error {
+  public statusCode: number;
+  constructor(message: string, statusCode: number) {
     super(message);
     this.statusCode = statusCode;
     this.name = "APIError";
@@ -15,13 +15,12 @@ export const asyncHandler =
     Promise.resolve(func(req, res, next)).catch(next);
   };
 
-  export const globalErrorHandler = (
+export const globalErrorHandler = (
   err: any,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-
   logger.error(
     `${req.method} ${req.originalUrl} - ${err.statusCode || 500} - ${
       err.message
@@ -30,6 +29,7 @@ export const asyncHandler =
 
   if (err instanceof APIError) {
     return res.status(err.statusCode).json({
+      success: false,
       status: "error",
       message: err.message,
     });

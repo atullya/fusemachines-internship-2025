@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../../store/store";
 import { fetchAllProduct, fetchProductById } from "../../store/productSlice";
 import { useNavigate } from "react-router-dom";
+import { addToCart } from "../../store/cartSlice";
 
 // 🎨 Verified working images (checked for live URLs)
 const images = [
@@ -112,6 +113,9 @@ const DisplayAllProduct = () => {
               style={{
                 color: "blue",
                 padding: "2px 7px",
+              }}
+              onClick={() => {
+                dispatch(addToCart({ productId: p._id }));
               }}
             >
               Add To Cart
