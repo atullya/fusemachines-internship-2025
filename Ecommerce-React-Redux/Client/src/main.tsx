@@ -10,6 +10,7 @@ import Home from "./component/Welcome/Home.tsx";
 import ProtectRoute from "./component/ProtectRoute.tsx";
 import AdminHome from "./Pages/Admin/AdminHome.tsx";
 import DisplayAllProduct from "./Pages/User/DisplayAllProduct.tsx";
+import ProductDetails from "./Pages/User/ProductDetails.tsx";
 const allRoutes = createBrowserRouter([
   {
     path: "/",
@@ -36,6 +37,14 @@ const allRoutes = createBrowserRouter([
     element: (
       <ProtectRoute>
         <DisplayAllProduct />
+      </ProtectRoute>
+    ),
+  },
+  {
+    path: "/product/:id",
+    element: (
+      <ProtectRoute>
+        <ProductDetails />
       </ProtectRoute>
     ),
   },
